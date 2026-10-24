@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MurkxWeb Budget Tracker</title>
+
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f1f5f9;
+        color: #1e293b;
+        margin: 0;
+        padding: 30px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #0f172a;
+        margin-bottom: 10px;
+    }
+
+    body > p {
+        text-align: center;
+        color: #64748b;
+        margin-bottom: 30px;
+    }
+
+    section {
+        background-color: white;
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    h2 {
+        color: #0f172a;
+        margin-top: 0;
+    }
+
+    h3 {
+        color: #475569;
+    }
+
+    #balance,
+    #income,
+    #expenses {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    #balance {
+        color: #2563eb;
+    }
+
+    #income {
+        color: #16a34a;
+    }
+
+    #expenses {
+        color: #dc2626;
+    }
+
+    label {
+        display: block;
+        margin-top: 15px;
+        margin-bottom: 6px;
+        font-weight: bold;
+    }
+
+    input,
+    select {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        font-size: 16px;
+    }
+input,
+select {
+    background-color: #ffffff;
+    color: #1e293b;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+#transaction-form button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 20px;
+    background-color: #2563eb;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+#transaction-form button:hover {
+    background-color: #1d4ed8;
+}
+    button {
+        background-color: #2563eb;
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-top: 12px;
+    }
+
+    button:hover {
+        background-color: #1d4ed8;
+    }
+
+    #transaction-list {
+        padding-left: 20px;
+    }
+
+    #transaction-list li {
+        padding: 12px 0;
+        border-bottom: 1px solid #e2e8f0;
+        overflow-wrap: anywhere;
+    }
+#transaction-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#transaction-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow-wrap: anywhere;
+}
+
+#transaction-list li span {
+    flex: 1;
+    min-width: 0;
+}
+
+#transaction-list li button {
+    flex-shrink: 0;
+    margin-top: 0;
+}
+    #transaction-list button {
+margin-left: 10px;
+}
+
+#transaction-list button:first-of-type {
+background-color: #2563eb;
+color: white;
+}
+
+#transaction-list button:first-of-type:hover {
+background-color: #1d4ed8;
+}
+
+#transaction-list button:last-of-type {
+background-color: #dc2626;
+color: white;
+}
+
+#transaction-list button:last-of-type:hover {
+background-color: #b91c1c;
+}
+
+    
+
+    
+    @media (max-width: 600px) {
+        body {
+            padding: 12px;
+        }
+
+        section {
+            padding: 18px;
+        }
+    }
+.summary-container {
+display: grid;
+grid-template-columns: repeat(3, minmax(0, 1fr));
+gap: 18px;
+margin-top: 20px;
+}
+
+.summary-card {
+min-width: 0;
+padding: 22px;
+border: 1px solid;
+border-radius: 14px;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.summary-card:hover {
+transform: translateY(-4px);
+box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+}
+
+.summary-card h3 {
+margin-top: 0;
+font-size: 15px;
+color: #475569;
+}
+
+.summary-card p {
+margin-bottom: 0;
+font-size: 24px;
+font-weight: bold;
+overflow-wrap: anywhere;
+}
+
+.balance-card {
+background-color: #eff6ff;
+border-color: #bfdbfe;
+}
+
+.balance-card p {
+color: #2563eb;
+}
+
+.income-card {
+background-color: #f0fdf4;
+border-color: #bbf7d0;
+}
+
+.income-card p {
+color: #16a34a;
+}
+
+.expenses-card {
+background-color: #fef2f2;
+border-color: #fecaca;
+}
+
+.expenses-card p {
+color: #dc2626;
+}
+
+@media (max-width: 650px) {
+.summary-container {
+grid-template-columns: 1fr;
+}
+}
+
+#transaction-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+#transaction-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+#transaction-list li:hover {
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+#transaction-list li span {
+    flex: 1;
+    min-width: 180px;
+    overflow-wrap: anywhere;
+}
+
+#transaction-list button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+#transaction-list button:hover {
+    opacity: 0.85;
+}
+
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f1f5f9;
+    color: #1e293b;
+    line-height: 1.6;
+}
+
+section {
+    background-color: #ffffff;
+    padding: 24px;
+    margin-bottom: 24px;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+}
+
+h2 {
+    color: #0f172a;
+    font-size: 22px;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-top: 14px;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #334155;
+}
+
+input,
+select {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #1e293b;
+    font-size: 15px;
+}
+
+input:focus,
+select:focus {
+    outline: 2px solid #93c5fd;
+    border-color: #2563eb;
+}
+
+
+@media (max-width: 768px) {
+    body {
+        padding: 12px;
+    }
+
+    section {
+        padding: 16px;
+    }
+
+    .summary-container {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-card {
+        padding: 18px;
+    }
+
+    #transaction-list li {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #transaction-list li span {
+        min-width: 0;
+    }
+
+    #transaction-list button {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 400px) {
+    .summary-card p {
+        font-size: 21px;
+    }
+
+    section {
+        padding: 12px;
+    }
+}
+
+
+
+.budget-overview {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin: 25px 0 30px;
+}
+
+.overview-card {
+    background: #ffffff;
+    padding: 22px 18px;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 5px 15px rgba(15, 23, 42, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.overview-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.10);
+}
+
+.overview-card h3 {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0 0 12px;
+    font-weight: 600;
+}
+
+.overview-card p {
+    font-size: 23px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+
+.overview-card:nth-child(1) {
+    border-top: 4px solid #2563eb;
+}
+
+.overview-card:nth-child(2) {
+    border-top: 4px solid #f59e0b;
+}
+
+.overview-card:nth-child(3) {
+    border-top: 4px solid #16a34a;
+}
+
+.overview-card:nth-child(4) {
+    border-top: 4px solid #dc2626;
+}
+
+
+@media (max-width: 900px) {
+    .budget-overview {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+@media (max-width: 480px) {
+    .budget-overview {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .overview-card {
+        padding: 18px;
+    }
+
+    .overview-card p {
+        font-size: 21px;
+    }
+}
+
+
+
+.savings-goals {
+    margin-top: 25px;
+}
+
+.savings-goals form {
+    background: #f8fafc;
+    padding: 22px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    margin-bottom: 28px;
+}
+
+.savings-goals form button {
+    margin-top: 18px;
+    width: 100%;
+    padding: 13px;
+    background: #16a34a;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.savings-goals form button:hover {
+    background: #15803d;
+}
+
+#savings-goals-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    margin-top: 18px;
+}
+
+.savings-goal-card {
+    background: #ffffff;
+    padding: 22px;
+    border: 1px solid #e2e8f0;
+    border-left: 5px solid #16a34a;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    min-width: 0;
+}
+
+.savings-goal-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.10);
+}
+
+.savings-goal-card h4 {
+    color: #0f172a;
+    font-size: 19px;
+    margin: 0 0 14px;
+    overflow-wrap: anywhere;
+}
+
+.savings-goal-card p {
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.savings-goal-card button {
+    padding: 10px 14px;
+    margin: 14px 8px 0 0;
+    border: none;
+    border-radius: 7px;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.savings-goal-card .update-savings {
+    background: #2563eb;
+}
+
+.savings-goal-card .update-savings:hover {
+    background: #1d4ed8;
+}
+
+.savings-goal-card .delete-savings-goal {
+    background: #dc2626;
+}
+
+.savings-goal-card .delete-savings-goal:hover {
+    background: #b91c1c;
+}
+
+
+@media (max-width: 768px) {
+    #savings-goals-list {
+        grid-template-columns: 1fr;
+    }
+
+    .savings-goals form {
+        padding: 16px;
+    }
+
+    .savings-goal-card {
+        padding: 18px;
+    }
+}
+
+@media (max-width: 400px) {
+    .savings-goal-card button {
+        width: 100%;
+        margin-right: 0;
+    }
+}
+
+#dark-mode-toggle {
+    display: block;
+    margin: 0 0 25px auto;
+    padding: 12px 20px;
+    background: #1e293b;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#dark-mode-toggle:hover {
+    background: #334155;
+    transform: translateY(-2px);
+}
+
+body.dark-mode {
+    background-color: #0f172a;
+    color: #e2e8f0;
+}
+
+body.dark-mode section {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #e2e8f0;
+}
+
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4 {
+    color: #f8fafc;
+}
+
+body.dark-mode p,
+body.dark-mode label {
+    color: #cbd5e1;
+}
+
+body.dark-mode input,
+body.dark-mode select {
+    background-color: #0f172a;
+    color: #f8fafc;
+    border-color: #475569;
+}
+
+body.dark-mode input::placeholder {
+    color: #94a3b8;
+}
+
+body.dark-mode .overview-card,
+body.dark-mode .savings-goal-card {
+    background-color: #273449;
+    border-color: #475569;
+}
+
+body.dark-mode .savings-goals form {
+    background-color: #1e293b;
+    border-color: #475569;
+}
+
+body.dark-mode #dark-mode-toggle {
+    background-color: #facc15;
+    color: #1e293b;
+}
+
+body.dark-mode #dark-mode-toggle:hover {
+    background-color: #eab308;
+}
+
+.backup-section {
+    margin-top: 25px;
+}
+
+.backup-section > p {
+    color: #64748b;
+    margin-bottom: 20px;
+}
+
+.backup-section button {
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.backup-section button:hover {
+    background: #1d4ed8;
+}
+
+.restore-area {
+    margin-top: 25px;
+    padding: 20px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+
+.restore-area label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.restore-area input[type="file"] {
+    margin-bottom: 15px;
+}
+
+#backup-message {
+    margin-top: 15px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+body.dark-mode .restore-area {
+    background: #273449;
+    border-color: #475569;
+}
+
+@media (max-width: 480px) {
+    .backup-section button {
+        width: 100%;
+    }
+
+    .restore-area {
+        padding: 15px;
+    }
+}
+
+.spending-chart-section {
+    margin-top: 25px;
+}
+
+.spending-chart-section > p {
+    color: #64748b;
+    margin-bottom: 20px;
+}
+
+.pie-chart-container {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    height: 350px;
+    margin: 25px auto;
+    padding: 15px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    box-sizing: border-box;
+}
+
+#pie-chart-message {
+    text-align: center;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+body.dark-mode .pie-chart-container {
+    background: #273449;
+    border-color: #475569;
+}
+
+@media (max-width: 480px) {
+    .pie-chart-container {
+        height: 300px;
+        padding: 10px;
+    }
+}
+
+.dashboard-welcome {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 25px;
+    padding: 30px;
+    margin: 20px 0 30px;
+    background: linear-gradient(135deg, #1e3a8a, #2563eb, #0ea5e9);
+    color: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.18);
+}
+
+.welcome-text {
+    flex: 1;
+}
+
+.welcome-label {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #bfdbfe;
+    margin-bottom: 12px;
+}
+
+.welcome-text h1 {
+    font-size: 30px;
+    line-height: 1.3;
+    margin: 0 0 12px;
+    color: #ffffff;
+}
+
+.welcome-text > p:last-child {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #eff6ff;
+    margin: 0;
+}
+
+.welcome-date {
+    min-width: 170px;
+    padding: 18px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 14px;
+}
+
+.welcome-date span {
+    display: block;
+    font-size: 12px;
+    color: #dbeafe;
+    margin-bottom: 8px;
+}
+
+.welcome-date h3 {
+    color: #ffffff;
+    font-size: 17px;
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .dashboard-welcome {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 22px;
+    }
+
+    .welcome-text h1 {
+        font-size: 24px;
+    }
+
+    .welcome-date {
+        min-width: 0;
+    }
+}
+
+
+
+.summary-container {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+    margin: 25px 0;
+}
+
+.summary-card {
+    position: relative;
+    overflow: hidden;
+    padding: 28px 24px;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 5px 18px rgba(15, 23, 42, 0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.summary-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+}
+
+.summary-card h3 {
+    margin: 0 0 18px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.summary-card p {
+    margin: 0;
+    font-size: clamp(21px, 2.5vw, 30px);
+    font-weight: 800;
+    overflow-wrap: anywhere;
+    color: #0f172a;
+}
+
+
+.balance-card {
+    border-top: 5px solid #2563eb;
+}
+
+.income-card {
+    border-top: 5px solid #16a34a;
+}
+
+.expenses-card {
+    border-top: 5px solid #dc2626;
+}
+
+
+body.dark-mode .summary-card {
+    background: #273449;
+    border-color: #475569;
+}
+
+body.dark-mode .summary-card h3 {
+    color: #cbd5e1;
+}
+
+body.dark-mode .summary-card p {
+    color: #f8fafc;
+}
+
+
+@media (max-width: 700px) {
+    .summary-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .summary-card {
+        padding: 23px 20px;
+    }
+}
+
+
+
+#transaction-search,
+#category-filter,
+#type-filter,
+#start-date,
+#end-date {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    margin: 8px 0 18px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 14px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#transaction-search:focus,
+#category-filter:focus,
+#type-filter:focus,
+#start-date:focus,
+#end-date:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.date-filter {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 16px;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.date-filter label {
+    margin-bottom: -5px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #475569;
+}
+
+.date-filter button {
+    width: 100%;
+}
+
+#transaction-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+#transaction-list li {
+    padding: 18px;
+    margin-bottom: 12px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #94a3b8;
+    border-radius: 12px;
+    overflow-wrap: anywhere;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+#transaction-list li:hover {
+    box-shadow: 0 5px 15px rgba(15, 23, 42, 0.07);
+    transform: translateY(-2px);
+}
+
+#transaction-list button {
+    margin: 8px 8px 0 0;
+    padding: 9px 14px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+#transaction-list button:hover {
+    opacity: 0.85;
+}
+
+body.dark-mode #transaction-search,
+body.dark-mode #category-filter,
+body.dark-mode #type-filter,
+body.dark-mode #start-date,
+body.dark-mode #end-date {
+    background: #273449;
+    color: #f8fafc;
+    border-color: #475569;
+}
+
+body.dark-mode .date-filter label {
+    color: #cbd5e1;
+}
+
+body.dark-mode #transaction-list li {
+    background: #273449;
+    border-color: #475569;
+    color: #f8fafc;
+}
+
+@media (max-width: 600px) {
+    .date-filter {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    #transaction-list li {
+        padding: 14px;
+    }
+}
+
+
+</style>
+
+
+</head>
+
+<body>
+<button id="dark-mode-toggle" type="button">🌙 Dark Mode</button>
+  
+<section class="dashboard-welcome">
+    <div class="welcome-text">
+        <p class="welcome-label">MURKXWEB FINANCE</p>
+        <h1>Welcome to Your Dashboard 👋</h1>
+        <p>Manage your money, track your spending, and work towards your savings goals.</p>
+    </div>
+
+    <div class="welcome-date">
+        <span>Today's Date</span>
+        <h3 id="dashboard-date"></h3>
+    </div>
+</section>
+
+
+<h1>My Budget Tracker</h1>
+<p>Manage your income and expenses.</p>
+
+<section>
+    <h2>My Financial Summary</h2>
+
+    <div class="summary-container">
+
+        <div class="summary-card balance-card">
+            <h3>Total Balance</h3>
+            <p id="balance">KSh 0.00</p>
+        </div>
+
+        <div class="summary-card income-card">
+            <h3>Total Income</h3>
+            <p id="income">KSh 0.00</p>
+        </div>
+
+        <div class="summary-card expenses-card">
+            <h3>Total Expenses</h3>
+            <p id="expenses">KSh 0.00</p>
+        </div>
+
+    </div>
+</section>
+
+<section>
+    <h2>Add a Transaction</h2>
+
+    <form id="transaction-form">
+
+        <label for="description">Description</label>
+        <input
+            type="text"
+            id="description"
+            placeholder="e.g. Shopping or Salary"
+            required
+        >
+
+    <label for="category">Category</label>
+    <select id="category" required>
+        <option value="">Select a category</option>
+        <option value="Food">Food</option>
+        <option value="Transport">Transport</option>
+        <option value="Rent">Rent</option>
+        <option value="Airtime & Data">Airtime & Data</option>
+        <option value="Education">Education</option>
+        <option value="Shopping">Shopping</option>
+        <option value="Entertainment">Entertainment</option>
+        <option value="Other">Other</option>
+    </select>
+
+
+        <label for="amount">Amount (KSh)</label>
+        <input
+            type="number"
+            id="amount"
+            placeholder="Enter amount"
+            min="0.01"
+            step="0.01"
+            required
+        >
+
+        <label for="type">Transaction Type</label>
+        <select id="type" required>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+        </select>
+
+        <button type="submit">Add Transaction</button>
+
+    </form>
+</section>
+
+<section class="chart-section">
+    <h2>Income vs Expenses</h2>
+    <canvas id="financeChart"></canvas>
+</section>
+
+<section class="monthly-report">
+    <h2>Monthly Financial Report</h2>
+
+    <label for="report-month">Select Month:</label>
+    <input type="month" id="report-month">
+
+    <div class="summary-container">
+        <div class="summary-card income-card">
+            <h3>Monthly Income</h3>
+            <p id="monthly-income">KSh 0.00</p>
+        </div>
+
+        <div class="summary-card expenses-card">
+            <h3>Monthly Expenses</h3>
+            <p id="monthly-expenses">KSh 0.00</p>
+        </div>
+
+        <div class="summary-card balance-card">
+            <h3>Monthly Balance</h3>
+            <p id="monthly-balance">KSh 0.00</p>
+        </div>
+    </div>
+</section>
+
+<section class="spending-insights">
+    <h2>My Spending Insights</h2>
+
+    <div class="insights-container">
+
+        <div class="insight-card">
+            <h3>Highest Spending Category</h3>
+            <p id="highest-spending-category">No data yet</p>
+        </div>
+
+        <div class="insight-card">
+            <h3>Total Monthly Expenses</h3>
+            <p id="insights-monthly-expenses">KSh 0.00</p>
+        </div>
+
+        <div class="insight-card">
+            <h3>Monthly Expense Transactions</h3>
+            <p id="monthly-expense-count">0</p>
+        </div>
+
+    </div>
+
+    <div class="spending-advice">
+        <h3>💡 Smart Spending Advice</h3>
+        <p id="spending-advice-message">
+            Add some expenses to receive spending advice.
+        </p>
+    </div>
+</section>
+
+<section class="savings-goals">
+    <h2>My Savings Goals</h2>
+
+    <form id="savings-goal-form">
+        <label for="goal-name">Goal Name:</label>
+        <input
+            type="text"
+            id="goal-name"
+            placeholder="e.g. Buy a Laptop"
+            required
+        >
+
+        <label for="goal-target">Target Amount (KSh):</label>
+        <input
+            type="number"
+            id="goal-target"
+            min="0.01"
+            step="0.01"
+            placeholder="e.g. 60000"
+            required
+        >
+
+        <label for="goal-saved">Amount Already Saved (KSh):</label>
+        <input
+            type="number"
+            id="goal-saved"
+            min="0"
+            step="0.01"
+            value="0"
+            required
+        >
+
+        <button type="submit">Create Savings Goal</button>
+    </form>
+
+    <h3>Your Goals</h3>
+
+    <div id="savings-goals-list">
+        <p>No savings goals created yet.</p>
+    </div>
+</section>
+
+
+
+
+<section>
+<section class="budget-section">
+    <h2>My Monthly Budgets</h2>
+
+
+<div class="budget-overview">
+
+
+<div class="overview-card">
+    <h3>Total Budget</h3>
+    <p id="total-budget">KSh 0.00</p>
+</div>
+
+<div class="overview-card">
+    <h3>Total Spent</h3>
+    <p id="total-spent">KSh 0.00</p>
+</div>
+
+<div class="overview-card">
+    <h3>Total Remaining</h3>
+    <p id="total-remaining">KSh 0.00</p>
+</div>
+
+<div class="overview-card">
+    <h3>Budgets Exceeded</h3>
+    <p id="budgets-exceeded">0</p>
+</div>
+
+
+</div>
+
+    <form id="budget-form">
+        <label for="budget-category">Choose Category:</label>
+        <select id="budget-category" required>
+            <option value="">Select a category</option>
+            <option value="Food">Food</option>
+            <option value="Transport">Transport</option>
+            <option value="Rent">Rent</option>
+            <option value="Airtime & Data">Airtime & Data</option>
+            <option value="Education">Education</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <label for="budget-amount">Monthly Budget (KSh):</label>
+        <input
+            type="number"
+            id="budget-amount"
+            min="0.01"
+            step="0.01"
+            placeholder="Enter your budget"
+            required
+        >
+
+        <button type="submit">Save Budget</button>
+    </form>
+
+    <h3>Your Budget Summary</h3>
+
+    <div id="budget-list">
+        <p>No budgets have been set yet.</p>
+    </div>
+</section>
+    <h2>Transaction History</h2>
+<button type="button" id="export-transactions">
+    Export Transactions
+</button>
+<div class="date-filter">
+    <label for="start-date">Start Date:</label>
+    <input type="date" id="start-date">
+
+
+<label for="end-date">End Date:</label>
+<input type="date" id="end-date">
+
+<button type="button" id="filter-dates">Filter Dates</button>
+<button type="button" id="clear-date-filter">Clear Dates</button>
+
+
+</div>
+
+<label for="transaction-search">Search Transactions:</label>
+
+<input
+    type="text"
+    id="transaction-search"
+    placeholder="Search by description..."
+>
+
+
+<label for="category-filter">Filter by Category:</label>
+
+<select id="category-filter">
+    <option value="all">All Categories</option>
+    <option value="Food">Food</option>
+    <option value="Transport">Transport</option>
+    <option value="Rent">Rent</option>
+    <option value="Airtime & Data">Airtime & Data</option>
+    <option value="Education">Education</option>
+    <option value="Shopping">Shopping</option>
+    <option value="Entertainment">Entertainment</option>
+    <option value="Other">Other</option>
+</select>
+<label for="type-filter">Filter by Transaction Type:</label>
+<select id="type-filter">
+<option value="all">All Transactions</option>
+<option value="income">Income Only</option>
+<option value="expense">Expenses Only</option>
+</select>
+
+    <ul id="transaction-list">
+        <li>No transactions yet.</li>
+    </ul>
+</section>
+
+<section class="spending-chart-section">
+    <h2>📊 My Spending Breakdown</h2>
+      
+<label for="pie-chart-month">Choose a month:</label>
+<input type="month" id="pie-chart-month">
+
+
+    <p>See how your expenses are distributed across different categories.</p>
+
+    <div class="pie-chart-container">
+        <canvas id="expense-category-chart"></canvas>
+    </div>
+
+    <p id="pie-chart-message">
+        Add some expenses to see your spending breakdown.
+    </p>
+</section>
+<section class="backup-section">
+    <h2>💾 Backup & Restore</h2>
+
+    <p>
+        Keep your financial information safe by downloading a backup.
+        You can restore it whenever you need to.
+    </p>
+
+    <button id="export-backup" type="button">
+        📥 Download Backup
+    </button>
+
+    <div class="restore-area">
+        <label for="restore-file">Choose a backup file:</label>
+
+        <input
+            type="file"
+            id="restore-file"
+            accept=".json,application/json"
+        >
+
+        <button id="restore-backup" type="button">
+            📤 Restore Backup
+        </button>
+    </div>
+
+    <p id="backup-message" role="status"></p>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="budget-tracker.js"></script>
+
+
+</body>
+</html>
